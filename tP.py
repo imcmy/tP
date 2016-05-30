@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ##
 # @file tP.py
-# @brief 
+# @brief
 # @author scusjs@foxmail.com
 # @version 0.1.00
 # @date 2015-05-09
@@ -17,6 +17,7 @@ from content import Content
 locale.setlocale(locale.LC_ALL, '')
 default_line_time = 0.5
 
+
 class TerminalPresentation:
     def __init__(self, file_path):
         self.__init_win()
@@ -25,13 +26,13 @@ class TerminalPresentation:
         self.presentation_content = content.get_content_list()
         self.currentpath = os.getcwd()
         try:
-            self.show_str("tP by jinsheng, press 'j' to continue", 0, False)
+            self.show_str("tP by jinsheng, modified by imcmy. press 'j' to continue", 0, False)
             self.start()
         except KeyboardInterrupt:
             pass
         self.__reset_background()
         curses.endwin()
-    
+
     def __init_win(self):
         self.screen = curses.initscr()
         self.screen.keypad(True)
@@ -58,7 +59,6 @@ class TerminalPresentation:
                     current_page = 0
                 self.show_page(self.presentation_content[current_page])
 
-
             key = self.screen.getch()
 
     def show_page(self, page_info):
@@ -73,7 +73,8 @@ class TerminalPresentation:
             for i in range(0, len(page_content)):
                 content_txt = page_content[i]["content"]
                 self.show_str(content_txt, start_y + i + 2, True)
-        elif "image" in page_attribute :
+
+        elif "image" in page_attribute:
             image_path = page_info["content"][0]["content"]
             self.__set_background(os.path.join(self.image_path, image_path))
 
@@ -83,7 +84,7 @@ class TerminalPresentation:
                 content_txt = page_content[i]["content"]
                 self.__content_duang(content_txt, page_content[i]["attribute"], start_y + i)
 
-        elif "code" in page_attribute :
+        elif "code" in page_attribute:
             start_y = self.__get_start_y(len(page_content))
             max_len = 0
             max_len_index = 0
@@ -103,7 +104,7 @@ class TerminalPresentation:
                 content_txt = page_content[i]["content"]
                 self.show_code(content_txt, start_y + i, start_x, True)
 
-    #页面特效判断
+    # 页面特效判断
     def __page_duang_before(self, attribute):
         if "flash" in attribute:
             self.__clr()
@@ -136,13 +137,13 @@ class TerminalPresentation:
 
     def show_str(self, printstr, height, sleep):
         start_x = self.__get_start_x(printstr)
-        if sleep == True:
+        if sleep is True:
             self.__print_with_sleep(printstr, start_x, height)
         else:
             self.__print_without_sleep(printstr, start_x, height)
 
     def show_code(self, printstr, height, start_x, sleep):
-        if sleep == True:
+        if sleep is True:
             self.__print_with_sleep(printstr, start_x, height)
         else:
             self.__print_without_sleep(printstr, start_x, height)
@@ -201,15 +202,15 @@ class TerminalPresentation:
             self.screen.refresh()
 
     def __set_background(self, path):
-        set_back_str = "osascript -e \'tell application \"iTerm\" to set background image path of current session of current terminal to \"" + self.currentpath + "/" +path + "\"\'"
+        set_back_str = "osascript -e 'tell application \"iTerm\"' -e 'tell current session of first window' -e 'set background image to \"" + self.currentpath + "/" + path + "\"' -e 'end tell' -e 'end tell'"
         os.system(set_back_str)
 
     def __reset_background(self):
-        set_back_str = "osascript -e \'tell application \"iTerm\" to set background image path of current session of current terminal to \"\"\'"
+        set_back_str = "osascript -e 'tell application \"iTerm\"' -e 'tell current session of first window' -e 'set background image to \"\"' -e 'end tell' -e 'end tell'"
         os.system(set_back_str)
 
     def __is_cn_char(self, i):
-            #return 0x4e00<=ord(i)<0x9fa6
+            # return 0x4e00<=ord(i)<0x9fa6
             return not ord(i) < 0x3000
 
     def __get_start_x(self, printstr):

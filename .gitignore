@@ -1,6 +1,5 @@
 *~
 *.pyc
 *.swp
-test.jpg
 __pycache__
-SoftwareElite
+example/*
